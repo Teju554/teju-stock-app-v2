@@ -35,7 +35,7 @@ export interface Quote {
   t: number;
 }
 
-export interface StckInfo {
+export interface StocksList {
   companyNames: CompanyNames;
   quotes: Quote;
 }

@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import {
   CompanyNames,
   Quote,
-  StckInfo,
+  StocksList,
   StockInfo,
   Stocks,
 } from '../../models/stock';
@@ -23,16 +23,17 @@ export class StockTrackerComponent implements OnInit, OnDestroy {
   quoteData = [];
   companyNames: CompanyNames;
   quotes: Quote;
+  loading: boolean = false;
   subscription: Subscription = new Subscription();
 
   constructor(private readonly stockTrackerService: StockTrackerService) {}
 
   ngOnInit(): void {
-    this.createStockTracerForm();
-    this.getInititalStocksInfo();
+    this.createForm();
+    this.getInititalStocks();
   }
 
-  createStockTracerForm(): void {
+  createForm(): void {
     this.stockTrackerFormGroup = new FormGroup({
       symbol: new FormControl('', [
         Validators.required,
@@ -42,24 +43,25 @@ export class StockTrackerComponent implements OnInit, OnDestroy {
     });
   }
 
-  getInititalStocksInfo(): void {
+  getInititalStocks(): void {
     const stocks = localStorage.getItem('stockData');
     this.stockList = stocks ? JSON.parse(stocks) : [];
     this.stock = this.stockList;
   }
 
   submit(): void {
-    this.getStckCompanyNames();
+    this.getStocks();
   }
 
-  getStckCompanyNames(): void {
+  getStocks(): void {
+    this.loading = true;
     const { symbol } = this.stockTrackerFormGroup.value;
     combineLatest({
       companyNames: this.stockTrackerService.getStckCompanyNames(symbol),
       quotes: this.stockTrackerService.getQuotesInfo(symbol),
     })
       .pipe(
-        map((response: StckInfo) => {
+        map((response: StocksList) => {
           this.companyNames = response?.companyNames;
           this.quotes = response?.quotes;
           const list = {
@@ -80,6 +82,7 @@ export class StockTrackerComponent implements OnInit, OnDestroy {
           }
           localStorage.setItem('stockData', JSON.stringify(this.stockList));
           this.stockTrackerFormGroup.reset();
+          this.loading = false;
         })
       )
       .subscribe();

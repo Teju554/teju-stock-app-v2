@@ -33,22 +33,28 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6 col-sm-6 col-6">
-              <div class="content d-flex">
-                <div class="mr-5">
-                  <button
-                    type="submit"
-                    class="btn btn-dark mb-3"
-                    [disabled]="!stockTrackerFormGroup.valid"
-                  >
-                    Track Stock
-                  </button>
-                </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-6 mt-3">
+            <div class="content d-flex">
+              <div class="mr-5">
+                <button
+                  type="submit"
+                  class="btn btn-dark mb-3"
+                  [disabled]="!stockTrackerFormGroup.valid"
+                >
+                  Track Stock
+                </button>
               </div>
             </div>
           </div>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div class="text-center" *ngIf="loading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 
